@@ -1,6 +1,8 @@
 import pandas as pd  
 from flask import Flask, jsonify, request
 
+
+
 app = Flask(__name__)   
 
 
@@ -12,8 +14,15 @@ def homepage():
 @app.route('/cadastro/usuario', methods=["POST"])
 def cadastra_usuario():
     body = request.get_json()
-    print(body)
-    return body
+    if "nome" not in body:
+        return {'status': 400, 'mensagem': 'O parametro nome é obrigatorio'}
+    elif "email" not in body:
+        return {'status': 400, 'mensagem': 'O parametro email é obrigatorio'}
+    elif "senha" not in body:
+        return {'status': 400, 'mensagem': 'O parametro senha é obrigatorio'}
+              
+    usuario = insert_usuario(body['nome'], body['email'], body['senha'])
+    return usuario
 
 
 @app.route('/pegarvendas', methods=["GET"])
@@ -31,7 +40,8 @@ def pegar_tv():
     resposta = {'total de vendas da tv': total_tv}
     return jsonify(resposta)
 
-
+def insert_usuario(nome, email, senha):
+    return {"id": 1, "nome": nome}
 
 
 
