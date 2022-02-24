@@ -15,14 +15,25 @@ def homepage():
 def cadastra_usuario():
     body = request.get_json()
     if "nome" not in body:
-        return {'status': 400, 'mensagem': 'O parametro nome é obrigatorio'}
+        return gera_response(400, 'O parametro nome é obrigatorio')
     elif "email" not in body:
-        return {'status': 400, 'mensagem': 'O parametro email é obrigatorio'}
+        return gera_response(400, 'O parametro email é obrigatorio')
     elif "senha" not in body:
-        return {'status': 400, 'mensagem': 'O parametro senha é obrigatorio'}
-              
+        return gera_response(400, 'O parametro senha é obrigatorio')
+
     usuario = insert_usuario(body['nome'], body['email'], body['senha'])
-    return usuario
+    return gera_response(200, 'Usuario criado', 'user', usuario)
+
+
+def gera_response(status, mensagem, nome_do_conteudo=False, conteudo=False):
+    response = {}
+    response['status'] = status
+    response['mensagem'] = mensagem
+
+    if nome_do_conteudo and conteudo:
+        response[nome_do_conteudo] = conteudo
+
+    return response
 
 
 @app.route('/pegarvendas', methods=["GET"])
